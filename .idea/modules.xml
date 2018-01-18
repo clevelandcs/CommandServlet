@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/CommandServlet.iml" filepath="$PROJECT_DIR$/CommandServlet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/CommandServlet.iml" filepath="$PROJECT_DIR$/src/CommandServlet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/web/web.iml" filepath="$PROJECT_DIR$/web/web.iml" />
     </modules>
   </component>
 </project>

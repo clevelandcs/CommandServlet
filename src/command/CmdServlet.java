@@ -23,6 +23,7 @@ public class CmdServlet extends HttpServlet {
     private void initCommands() {
         commands = new HashMap<>();
         commands.put("weather", new Weather());
+        commands.put("locator", new Locator());
     }
 
     private Command lookupCommand(String cmd) {
