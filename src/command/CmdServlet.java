@@ -21,6 +21,7 @@ public class CmdServlet extends HttpServlet {
     }
 
     private void initCommands() {
+        commands = new HashMap<>();
         commands.put("weather", new Weather());
     }
 
