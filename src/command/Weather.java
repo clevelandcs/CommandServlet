@@ -10,10 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.io.*;
 
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @WebServlet("/web/weather.jsp")
 /**
@@ -22,24 +23,21 @@ import java.net.URLConnection;
  * XML parsing of wunderground API adapted from: http://usmanali112.blogspot.com/2012/07/java-weather-underground-api.html
  */
 public class Weather implements Command {
+    private String next = "weather.jsp";
 
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
+        HashMap<String, ArrayList> weather = new HashMap<String, ArrayList>();
         String zip = request.getParameter("zip");
         try {
             URL googleWeatherXml = new URL("http://api.wunderground.com/api/9f190758a045e35c/forecast/q/" + zip + ".xml");
 
             URLConnection uc = googleWeatherXml.openConnection();
             uc.connect();
-            PrintWriter pw = response.getWriter();
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(uc.getInputStream());
             doc.getDocumentElement().normalize();
-            pw.println("<html>");
-            pw.println("<head><title>Weather Forecast</title></title>");
-            pw.println("<body>");
-            pw.println("<table>");
             NodeList forecast = doc.getElementsByTagName("forecast");
             for (int a = 0; a < forecast.getLength(); a++) {
                 Node forecastNode = forecast.item(a);
@@ -81,10 +79,7 @@ public class Weather implements Command {
 
                                                     NodeList weekday = dateElement.getElementsByTagName("weekday");
                                                     Element day = (Element) weekday.item(0);
-                                                    pw.println("<tr>");
-                                                    pw.println("<td>Day of week:</td>");
-                                                    pw.println("<td>" + day.getTextContent() + "</td>");
-                                                    pw.println("</tr>");
+                                                    dataHelper(weather, day, "DayOfWeek");
                                                 }
                                             }
 
@@ -97,10 +92,7 @@ public class Weather implements Command {
                                                     Element highElement = (Element) highNode;
                                                     NodeList celsius = highElement.getElementsByTagName("celsius");
                                                     Element cel = (Element) celsius.item(0);
-                                                    pw.println("<tr>");
-                                                    pw.println("<td>High cel:</td>");
-                                                    pw.println("<td>" + cel.getTextContent() + "</td>");
-                                                    pw.println("</tr>");
+                                                    dataHelper(weather, cel, "Celsius_High");
                                                 }
                                             }
 
@@ -113,10 +105,7 @@ public class Weather implements Command {
                                                     Element lowElement = (Element) lowNode;
                                                     NodeList celsius = lowElement.getElementsByTagName("celsius");
                                                     Element cel = (Element) celsius.item(0);
-                                                    pw.println("<tr>");
-                                                    pw.println("<td>Low cel:</td>");
-                                                    pw.println("<td>" + cel.getTextContent() + "</td>");
-                                                    pw.println("</tr>");
+                                                    dataHelper(weather, cel, "Celsius_Low");
                                                 }
                                             }
 
@@ -129,33 +118,21 @@ public class Weather implements Command {
                                                     Element avewindElement = (Element) avewindNode;
                                                     NodeList mph = avewindElement.getElementsByTagName("mph");
                                                     Element mp = (Element) mph.item(0);
-                                                    pw.println("<tr>");
-                                                    pw.println("<td>mph:</td>");
-                                                    pw.println("<td>" + mp.getTextContent() + "</td>");
-                                                    pw.println("</tr>");
+                                                    dataHelper(weather, mp, "Wind_Speed");
 
                                                     NodeList dir = avewindElement.getElementsByTagName("dir");
                                                     Element dr = (Element) dir.item(0);
-                                                    pw.println("<tr>");
-                                                    pw.println("<td>Dir:</td>");
-                                                    pw.println("<td>" + dr.getTextContent() + "</td>");
-                                                    pw.println("</tr>");
+                                                    dataHelper(weather, dr, "Wind_Direction");
                                                 }
                                             }
 
                                             NodeList conditions = forecastdayElement.getElementsByTagName("conditions");
                                             Element con = (Element) conditions.item(0);
-                                            pw.println("<tr>");
-                                            pw.println("<td>conditions:</td>");
-                                            pw.println("<td>" + con.getTextContent() + "</td>");
-                                            pw.println("</tr>");
+                                            dataHelper(weather, con, "Conditions");
 
                                             NodeList avehumidity = forecastdayElement.getElementsByTagName("avehumidity");
                                             Element ave = (Element) avehumidity.item(0);
-                                            pw.println("<tr>");
-                                            pw.println("<td>average humidity:</td>");
-                                            pw.println("<td>" + ave.getTextContent() + "</td>");
-                                            pw.println("</tr>");
+                                            dataHelper(weather, ave, "Average_Humidity");
                                         }
                                     }
                                 }
@@ -164,11 +141,26 @@ public class Weather implements Command {
                     }
                 }
             }
-            pw.println("</body></html>");
-            pw.close();
         } catch (Exception ex) {
             System.out.println((ex.getMessage()));
         }
+        request.setAttribute("weather", weather);
+        System.out.println(request.getAttributeNames());
         return null;
+    }
+
+    private void dataHelper(HashMap<String, ArrayList> weather, Element element, String key) {
+        ArrayList item = weather.get(key);
+        if (item != null) {
+            item.add(element.getTextContent());
+        } else {
+            ArrayList arrayList = new ArrayList(1);
+            arrayList.add(element.getTextContent());
+            weather.put(key, arrayList);
+        }
+    }
+
+    public String getNext() {
+        return next;
     }
 }

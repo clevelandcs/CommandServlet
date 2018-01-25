@@ -1,5 +1,6 @@
 package command;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -36,12 +37,13 @@ public class CmdServlet extends HttpServlet {
         try {
             Command cmd = lookupCommand(request.getParameter("cmd"));
             cmd.execute(request, response);
-            System.out.println("CmdServlet: cmd = " + cmd + ", next = " + next);
+            next = cmd.getNext();
+            System.out.println("CmdServlet: cmd = " + cmd + ", next = " + cmd.getNext());
         } catch (CommandException e) {
             e.printStackTrace();
         }
-//ignore for now
-//RequestDispatcher rd;
-//rd = getServletContext(
+        RequestDispatcher rd;
+        rd = getServletContext().getRequestDispatcher(jspdir + next);
+        rd.forward(request, response);
     }
 }

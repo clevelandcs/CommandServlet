@@ -6,8 +6,11 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@	page import="java.util.*,java.text.*"%>
+<!DOCTYPE html>
 <html>
   <head>
+      <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
     <title>Cmd Servlet Home</title>
   </head>
   <body>
