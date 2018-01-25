@@ -20,11 +20,11 @@ public class CmdServlet extends HttpServlet {
         super.init(config);
         initCommands();
     }
-
     private void initCommands() {
         commands = new HashMap<>();
         commands.put("weather", new Weather());
         commands.put("locator", new Locator());
+        commands.put("crypto", new Crypto());
     }
 
     private Command lookupCommand(String cmd) {
@@ -45,5 +45,6 @@ public class CmdServlet extends HttpServlet {
         RequestDispatcher rd;
         rd = getServletContext().getRequestDispatcher(jspdir + next);
         rd.forward(request, response);
+
     }
 }
