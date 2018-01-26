@@ -14,8 +14,15 @@
         }
     </style>
     <title>Weather Forecast</title>
+    <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
+<ul>
+    <li><a class="active" href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=weather">Weather</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=geolocation">Geolocation</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=crypto">Crypto</a></li>
+</ul>
 <h1>Your 4-Day Forecast</h1>
 <Table>
     <%
@@ -34,9 +41,9 @@
             <%= e.getValue().get(i)%>
         </td>
     </tr>
-    <%          }
-            }
-        } else {
+    <% }
+    }
+    } else {
     %><p>Weather is unavailable</p>
     <%
         }

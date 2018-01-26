@@ -34,7 +34,7 @@ public class Locator implements Command {
             }
 
             request.setAttribute("data", data);
-            request.setAttribute("labels",labels);
+            request.setAttribute("labels", labels);
         } catch (Exception e) {
             e.printStackTrace();
         }

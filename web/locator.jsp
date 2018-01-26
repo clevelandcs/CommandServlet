@@ -14,8 +14,15 @@
         }
     </style>
     <title>Internet Geolocation</title>
+    <link rel="stylesheet" type="text/css" href="menu.css">
 </head>
 <body>
+<ul>
+    <li><a class="active" href="${pageContext.request.contextPath}/index.jsp">Home</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=weather">Weather</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=geolocation">Geolocation</a></li>
+    <li><a href="${pageContext.request.contextPath}/CmdServlet?cmd=index&menu=crypto">Crypto</a></li>
+</ul>
 <h1>Geolocation Data of <%=request.getParameter("address")%>
 </h1>
 <Table>

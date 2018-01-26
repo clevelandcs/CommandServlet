@@ -19,18 +19,18 @@ public class Crypto implements Command {
         try {
             URL cryptoCompare = new URL("https://min-api.cryptocompare.com/data/pricemulti?fsyms=" + currencies +  "&tsyms=BTC,USD");
             String jsonString = readUrl(cryptoCompare);
-            System.out.println(jsonString);
             JSONParser parser = new JSONParser();
             JSONObject jsonObject = (JSONObject)parser.parse(jsonString);
             HashMap data = new HashMap(jsonObject.size());
             for (Object e: jsonObject.entrySet()) {
                 Map.Entry<?, ?> entry = ((Map.Entry<?, ?>) e);
-                data.put(entry.getKey().toString(), entry.getValue().toString());
+                HashMap subData = new HashMap();
+                for(Object o: ((JSONObject)parser.parse(entry.getValue().toString())).entrySet()){
+                    Map.Entry<?,?>subEntry = ((Map.Entry<?,?>)o);
+                    subData.put(subEntry.getKey().toString(),subEntry.getValue().toString());
+                }
+                data.put(entry.getKey().toString(), subData);
             }
-            System.out.println(data.toString());
-            //for (int i = 0; i < labels.length; i++) {
-            //    data.put(labels[i], doc.getElementsByTagName(keys[i]).item(0).getTextContent());
-            //}
 
             request.setAttribute("data", data);
         } catch (Exception e) {
